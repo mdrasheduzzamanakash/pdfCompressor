@@ -45,9 +45,9 @@ compressPdfRoute.route('/').post(upload.single('avatar'), (req, res, next) => {
         let inPath = __dirname;
         inPath = inPath.replace('/routes', '') + '/public/';
         outPath = inPath + 'converted';
-        
+
         shell.exec(`./shrinkpdf.sh -o ${outPath}/_${result.pipeId}_${result.fileName} ${inPath}/${result.fileName}`)
-        
+
         res.status(201).json({
             message: "User registered successfully!",
             userCreated: {
@@ -58,7 +58,8 @@ compressPdfRoute.route('/').post(upload.single('avatar'), (req, res, next) => {
                 link: result.link,
                 note: result.note,
                 pipeId: result.pipeId,
-                fileName: result.fileName
+                fileName: result.fileName,
+                download_link: `_${result.pipeId}_${result.fileName}`
             }
         })
     }).catch(err => {
@@ -81,6 +82,7 @@ compressPdfRoute.route('/:id').get((req, res, next) => {
 
 
 compressPdfRoute.route('/download/:id').get((req, res, next) => {
+    console.log(req.params.id)
     let outPath = __dirname;
     outPath = outPath.replace('/routes', '') + '/public/converted/';
     res.download(outPath + req.params.id)
